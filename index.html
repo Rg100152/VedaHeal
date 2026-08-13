@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VedaHeal - Ayurvedic Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-green: #2d6a4f;
+            --light-green: #d8f3dc;
+            --accent-color: #f4a261;
+            --text-dark: #1b4332;
+            --bg-color: #fbfaf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
+
+        /* Navbar */
+        nav {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        nav h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        /* Hero Section with Custom Image Background */
+        .hero {
+            background: linear-gradient(rgba(27, 67, 50, 0.7), rgba(27, 67, 50, 0.7)), 
+                        url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80') center/cover;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        /* Search Container */
+        .search-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(-50px);
+            width: 90%;
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid var(--light-green);
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .search-container input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .search-container button {
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .search-container button:hover {
+            background-color: #e76f51;
+            transform: translateY(-2px);
+        }
+
+        /* Results Section */
+        .results-container {
+            max-width: 900px;
+            margin: 20px auto 80px;
+            padding: 0 20px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .remedy-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .remedy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .remedy-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .remedy-content {
+            padding: 20px;
+        }
+
+        .remedy-content h3 {
+            color: var(--primary-green);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .remedy-content h4 {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .remedy-content p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--light-green);
+            color: var(--primary-green);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .no-result {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #777;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>VedaHeal</h1>
+        <p>Your Virtual Vaidya</p>
+    </nav>
+
+    <header class="hero">
+        <h2>Ancient Wisdom for Modern Wellness</h2>
+        <p>Discover personalized Ayurvedic remedies for your everyday health concerns. Enter your symptoms below to find natural healing solutions.</p>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <input type="text" id="symptomInput" placeholder="Enter symptom (e.g., stress, cold, digestion, sleep...)">
+            <button onclick="findRemedy()">Find Remedy</button>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <!-- Dynamic Results will appear here -->
+            <div class="no-result" id="noResultMsg">
+                No specific remedy found for this symptom. Try searching for: Stress, Cold, Digestion, Immunity, or Sleep.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 VedaHeal. Developed & Designed by Raj Gautam.</p>
+    </footer>
+
+    <script>
+        // Simulated Backend Database (JSON Object)
+        const ayurvedaDB = [
+            {
+                keywords: ["stress", "anxiety", "tension", "worry"],
+                name: "Ashwagandha (Indian Ginseng)",
+                sanskrit: "Withania Somnifera",
+                desc: "An adaptogenic herb that helps your body manage stress. It lowers cortisol levels, calms the brain, and reduces inflammation.",
+                usage: "Take 1/2 teaspoon of Ashwagandha powder with warm milk before bedtime.",
+                image: "https://images.unsplash.com/photo-1611078816654-8a7e089d7010?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+                keywords: ["cold", "cough", "throat", "fever"],
+                name: "Tulsi (Holy Basil)",
+                sanskrit: "Ocimum Sanctum",
+                desc: "Known as 'The Queen of Herbs', Tulsi has powerful antimicrobial and anti-inflammatory properties that clear respiratory tracts.",
+                usage: "Boil 5-7 Tulsi leaves in water with crushed ginger. Strain and drink with a spoonful of honey.",
+                image: "https://images.unsplash.com/photo-1628795079633-882d22d257a0?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+                keywords: ["digestion", "stomach", "gas", "bloating", "acidity"],
+                name: "Triphala",
+                sanskrit: "Amalaki, Bibhitaki, Haritaki",
+                desc: "A traditional herbal blend consisting of three fruits. It acts as a gentle bowel tonic, aids in digestion, and promotes internal cleansing.",
+                usage: "Mix 1 teaspoon of Triphala powder in warm water and drink it empty stomach in the morning or before bed.",
+                image: "https://images.unsplash.com/photo-1596547609652-9fc5d8d42497?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+                keywords: ["sleep", "insomnia", "restless"],
+                name: "Brahmi",
+                sanskrit: "Bacopa Monnieri",
+                desc: "A powerful brain tonic that supports restful sleep, calms emotional turbulence, and improves concentration and memory.",
+                usage: "Massage Brahmi oil on the scalp or take Brahmi powder with ghee and warm water.",
+                image: "https://images.unsplash.com/photo-1599818815152-f4ab88ab238a?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+                keywords: ["immunity", "weakness", "energy"],
+                name: "Giloy",
+                sanskrit: "Tinospora Cordifolia",
+                desc: "A universal herb that boosts immunity, fights free radicals, keeps your cells healthy, and gets rid of diseases.",
+                usage: "Consume Giloy juice mixed with a glass of water every morning on an empty stomach.",
+                image: "https://images.unsplash.com/photo-1543363136-3fdb62e11be5?auto=format&fit=crop&w=400&q=80"
+            }
+        ];
+
+        // Frontend Logic (Acting as Backend Controller)
+        function findRemedy() {
+            const input = document.getElementById('symptomInput').value.toLowerCase().trim();
+            const container = document.getElementById('resultsContainer');
+            const noResult = document.getElementById('noResultMsg');
+            
+            // Clear previous results (except the no-result message div)
+            const oldCards = document.querySelectorAll('.remedy-card');
+            oldCards.forEach(card => card.remove());
+            
+            if (input === "") return;
+
+            let found = false;
+
+            ayurvedaDB.forEach(remedy => {
+                // Check if any of the keywords match the user input
+                const isMatch = remedy.keywords.some(keyword => input.includes(keyword));
+                
+                if (isMatch) {
+                    found = true;
+                    // Create Card UI
+                    const card = document.createElement('div');
+                    card.className = 'remedy-card';
+                    card.style.display = 'block';
+                    
+                    card.innerHTML = `
+                        <img src="${remedy.image}" alt="${remedy.name}" class="remedy-img">
+                        <div class="remedy-content">
+                            <h3>${remedy.name}</h3>
+                            <h4>${remedy.sanskrit}</h4>
+                            <p>${remedy.desc}</p>
+                            <span class="tag">💡 ${remedy.usage}</span>
+                        </div>
+                    `;
+                    container.insertBefore(card, noResult);
+                }
+            });
+
+            // Toggle "No result found" message
+            if (found) {
+                noResult.style.display = 'none';
+            } else {
+                noResult.style.display = 'block';
+            }
+        }
+
+        // Allow pressing "Enter" to search
+        document.getElementById("symptomInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                findRemedy();
+            }
+        });
+    </script>
+</body>
+</html>
